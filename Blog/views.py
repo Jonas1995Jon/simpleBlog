@@ -24,6 +24,12 @@ def edit_action(request):
     articleID = request.POST.get('articleID', '0')
     title = request.POST.get('title', 'TITLE')
     content = request.POST.get('content', 'CONTENT')
-    Article.objects.create(title=title, content=content)
-    articles = Article.objects.all()
-    return render(request, 'Blog/index.html', {'articles': articles})
+    if articleID == '0':
+        Article.objects.create(title=title, content=content)
+        articles = Article.objects.all()
+        return render(request, 'Blog/index.html', {'articles': articles})
+    article = Article.objects.get(id=articleID)
+    article.title = title
+    article.content = content
+    article.save()
+    return render(request, 'Blog/article_page.html', {'article': article})
